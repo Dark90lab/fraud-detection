@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>org.example.KafkaConsumer</mainClass>
+                  <mainClass>org.example.FraudsDetector</mainClass>
                 </transformer>
               </transformers>
             </configuration>

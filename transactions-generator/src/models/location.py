@@ -9,5 +9,5 @@ class Location(Serializable):
     def to_dict(self):
         return {
             'lat': self.latitude,
-            'long': self.longitude
+            'lon': self.longitude
         }

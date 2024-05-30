@@ -14,64 +14,65 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 public class KafkaConsumer {
-    private static final String ReadTopic = "Temperatura";
-    private static final String WriteTopic = "Alarm";
+   private static final String ReadTopic = "Temperatura";
+   private static final String WriteTopic = "Alarm";
 
-    public static void main(String[] args) throws Exception {
-        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+   public static void main(String[] args) throws Exception {
+       final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        FlinkKafkaConsumer<TemperatureReading> temperatureConsumer = new FlinkKafkaConsumer<>(ReadTopic, new TemperatureDeserializationSchema(), GetKafkaProperties());
+       FlinkKafkaConsumer<TemperatureReading> temperatureConsumer = new FlinkKafkaConsumer<>(ReadTopic, new TemperatureDeserializationSchema(), GetKafkaProperties());
 
-        FlinkKafkaProducer<String> alarmProducer = new FlinkKafkaProducer<>(WriteTopic, new SimpleStringSchema(),GetKafkaProperties());
+       FlinkKafkaProducer<String> alarmProducer = new FlinkKafkaProducer<>(WriteTopic, new SimpleStringSchema(),GetKafkaProperties());
 
-        DataStream<TemperatureReading> temperatureStream = env.addSource(temperatureConsumer.setStartFromEarliest());
+       DataStream<TemperatureReading> temperatureStream = env.addSource(temperatureConsumer.setStartFromEarliest());
 
-        DataStream<String> alarmStream = temperatureStream.filter(new FilterFunction<TemperatureReading>() {
-            @Override
-            public boolean filter(TemperatureReading reading) throws Exception {
-                return reading.temperature < 0;
-            }
-        }).map(reading -> "Alarm " + reading.id + " " + reading.timestamp + " " + reading.temperature);
+       DataStream<String> alarmStream = temperatureStream.filter(new FilterFunction<TemperatureReading>() {
+           @Override
+           public boolean filter(TemperatureReading reading) throws Exception {
+               return reading.temperature < 0;
+           }
+       }).map(reading -> "Alarm " + reading.id + " " + reading.timestamp + " " + reading.temperature);
 
+       alarmStream.print();
+       alarmStream.addSink(alarmProducer);
+       alarmStream.print();
 
-        alarmStream.addSink(alarmProducer);
+       env.execute("Temperature Alarm Processor");
+   }
 
-        env.execute("Temperature Alarm Processor");
-    }
+   private static Properties GetKafkaProperties()
+   {
+       Properties properties = new Properties();
+       properties.setProperty("bootstrap.servers", "localhost:9092");
 
-    private static Properties GetKafkaProperties()
-    {
-        Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "localhost:9092");
+       return properties;
+   }
 
-        return properties;
-    }
+   public static class TemperatureReading {
+       public int id;
+       public String timestamp;
+       public int temperature;
+   }
 
-    public static class TemperatureReading {
-        public int id;
-        public String timestamp;
-        public int temperature;
-    }
+   public static class TemperatureDeserializationSchema implements DeserializationSchema<TemperatureReading> {
 
-    public static class TemperatureDeserializationSchema implements DeserializationSchema<TemperatureReading> {
+       @Override
+       public TemperatureReading deserialize(byte[] message) throws IOException {
+           String jsonString = new String(message, StandardCharsets.UTF_8);
 
-        @Override
-        public TemperatureReading deserialize(byte[] message) throws IOException {
-            String jsonString = new String(message, StandardCharsets.UTF_8);
+           ObjectMapper mapper = new ObjectMapper();
+           return mapper.readValue(jsonString, TemperatureReading.class);
+       }
 
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(jsonString, TemperatureReading.class);
-        }
+       @Override
+       public boolean isEndOfStream(TemperatureReading nextElement) {
+           return false;
+       }
 
-        @Override
-        public boolean isEndOfStream(TemperatureReading nextElement) {
-            return false;
-        }
-
-        @Override
-        public TypeInformation<TemperatureReading> getProducedType() {
-            return TypeInformation.of(TemperatureReading.class);
-        }
-    }
+       @Override
+       public TypeInformation<TemperatureReading> getProducedType() {
+           return TypeInformation.of(TemperatureReading.class);
+       }
+   }
 
 }

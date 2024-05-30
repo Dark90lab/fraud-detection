@@ -17,10 +17,10 @@ class TransactionResult(TransactionResultBase):
 
     def to_dict(self):
         return {
-            'id': self.id,
+            'id': int(self.id),
             'type': self.type,
-            'user_id': self.user_id,
-            'card_id': self.card_id,
+            'user_id': int(self.user_id),
+            'card_id': int(self.card_id),
             'value': self.value,
             'timestamp': self.timestamp,
             'location': self.location.to_dict()
