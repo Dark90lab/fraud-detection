@@ -17,11 +17,13 @@ public class ConfigProvider {
     private final Map<String, String> envVariables;
     public final KafkaConfig kafkaConfig;
     public final ValueTresholdFraudConfig valueTresholdFraudConfig;
+    public final LocationConfig locationConfig;
 
     private ConfigProvider() throws Exception {
         envVariables = new HashMap<>(System.getenv());
         kafkaConfig = new KafkaConfig();
         valueTresholdFraudConfig = new ValueTresholdFraudConfig();
+        locationConfig = new LocationConfig();
     }
 
     public static ConfigProvider getInstance() {

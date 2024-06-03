@@ -3,6 +3,8 @@ from models import FraudType
 from providers import ScenarioProvider
 from .transaction_base import TransactionBase
 from .value_treshold_fraud_transaction import ValueTresholdFraudTransaction
+from .suspicious_location_fraud_transaction import SuspiciousLocationFruadTransaction
+from .location_treshold_fraud_transaction import LocationTresholdFraudTransaction
 from .valid_transaction import ValidTransaction
 import numpy as np
 
@@ -10,6 +12,8 @@ import numpy as np
 class TransactionsFactory:
     frauds_transactions_map: Dict[FraudType, Type[TransactionBase]] = {
         FraudType.VALUE_TRESHOLD: ValueTresholdFraudTransaction,
+        FraudType.LOCATION_OUTLIER: SuspiciousLocationFruadTransaction,
+        FraudType.LOCATION_TRESHOLD: LocationTresholdFraudTransaction,
         FraudType.NONE: ValidTransaction
     }
 

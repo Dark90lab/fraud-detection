@@ -26,7 +26,7 @@ class TransactionBase:
         pass
 
     def get_value(self) -> float:
-        pass
+        return round(np.random.uniform(self.scenario.MIN_VALUE_AMOUNT, self.scenario.LARGE_VALUE_AMOUNT), 2)
 
     def get_result_base(self, value) -> TransactionResultBase:
         card_id = np.random.choice(self.user.cards_ids)

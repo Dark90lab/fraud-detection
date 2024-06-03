@@ -20,6 +20,10 @@ class FraudProbabilitiesAdapter:
         result = {
             FraudType.VALUE_TRESHOLD: float(
                 getenv("VALUE_TRESHOLD_FRAUDS_PROB")),
+            FraudType.LOCATION_OUTLIER: float(
+                getenv("LOCATION_OUTLIER_FRAUDS_PROB")),
+            FraudType.LOCATION_TRESHOLD: float(
+                getenv("LOCATION_TRESHOLD_FRAUDS_PROB"))
         }
 
         cumulative_probabilities = sum(result.values())
@@ -57,3 +61,5 @@ class ScenarioProvider:
         self.VALUE_TRESHOLD_FRAUDS_TIME_RANGE = TimeRange(
             getenv("VALUE_TRESHOLD_FRAUDS_TIME_RANGE"))
         self.frauds_probabilities = FraudProbabilitiesAdapter.get_probabilities()
+        self.LOCATION_TRESHOLD_FRAUDS_TIME_RANGE = TimeRange(
+            getenv("LOCATION_TRESHOLD_FRAUDS_TIME_RANGE"))

@@ -10,6 +10,7 @@ class ConfigProvider:
         self.USERS_NUMBER = self.CARDS_NUMBER/self.MAX_CARDS_PER_USER
         self.KAFKA_TOPIC = getenv("KAFKA_TOPIC")
         self.KAFKA_BOOTSTRAP_SERVER = getenv("KAFKA_BOOTSTRAP_SERVER")
+        self.IS_DEVELOPMENT = bool(getenv("DEVELOPMENT") == "True")
 
         if self.CARDS_NUMBER is None or self.USERS_NUMBER is None or self.MAX_CARDS_PER_USER is None:
             raise Exception("Provide all required env variables!")

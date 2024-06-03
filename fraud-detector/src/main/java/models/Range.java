@@ -3,8 +3,8 @@ package models;
 import java.io.Serializable;
 
 public class Range implements Serializable {
-    public final float from;
-    public final float to;
+    public final double from;
+    public final double to;
 
     public Range(String range) throws Exception {
         var splitRange = range.split(",");

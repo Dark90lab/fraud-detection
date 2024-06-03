@@ -38,7 +38,8 @@ class TransactionsGenerator(BaseGenerator):
 
                 print(serializer(transaction.to_dict()))
 
-                self.producer.send(self.config.KAFKA_TOPIC,
-                                   transaction.to_dict())
+                if self.config.IS_DEVELOPMENT == False:
+                    self.producer.send(self.config.KAFKA_TOPIC,
+                                       transaction.to_dict())
 
                 time.sleep(timeout)

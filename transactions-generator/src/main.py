@@ -11,6 +11,6 @@ if __name__ == "__main__":
     config_provider = ConfigProvider()
 
     producer = KafkaProducer(bootstrap_servers=[config_provider.KAFKA_BOOTSTRAP_SERVER],
-                             value_serializer=serializer)
+                             value_serializer=serializer) if config_provider.IS_DEVELOPMENT == False else None
 
     TransactionsGenerator(config_provider, scenario_provider, producer).run()

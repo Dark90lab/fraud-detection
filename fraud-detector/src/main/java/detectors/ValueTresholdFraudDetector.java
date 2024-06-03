@@ -17,11 +17,11 @@ public class ValueTresholdFraudDetector extends KeyedProcessFunction<Long, Trans
     @Override
     public void open(OpenContext openContext)
     {
-        ValueStateDescriptor<Boolean> flagDescriptor = new ValueStateDescriptor<>("flag", Types.BOOLEAN);
+        ValueStateDescriptor<Boolean> flagDescriptor = new ValueStateDescriptor<>("vlaue-flag", Types.BOOLEAN);
         flagState = getRuntimeContext().getState(flagDescriptor);
 
         ValueStateDescriptor<Long> timerDescriptor = new ValueStateDescriptor<>(
-                "timer-state",
+                "value-treshold-timer-state",
                 Types.LONG);
         timerState = getRuntimeContext().getState(timerDescriptor);
     }

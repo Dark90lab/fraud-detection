@@ -23,15 +23,15 @@ class ValueTresholdFraudTransaction(TransactionBase):
         result: list[Tuple[float, TransactionResult]] = list()
 
         small_amount_transaction = self.get_result(
-            np.random.uniform(0.01, self.scenario.MIN_VALUE_AMOUNT))
+            round(np.random.uniform(0.01, self.scenario.MIN_VALUE_AMOUNT), 2))
         large_amount_transaction = self.get_result(
             np.random.uniform(self.scenario.LARGE_VALUE_AMOUNT,
-                              self.scenario.LARGE_VALUE_AMOUNT + self.value_exceed_limit)
+                              round(self.scenario.LARGE_VALUE_AMOUNT + self.value_exceed_limit, 2))
         )
 
         result.append((self.get_suspicious_waiting_time(),
                       small_amount_transaction))
-        result.append((self.get_valid_waiting_time(),
+        result.append((self.get_suspicious_waiting_time(),
                       large_amount_transaction))
 
         return result

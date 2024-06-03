@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 source .env
 
-if [ "$#" -ne 1 ]; then
-    echo "Error: Expected exactly 2 arguments."
-    exit 1 # Exit with a non-zero status to indicate an error
-fi
+# if [ "$#" -ne 1 ]; then
+#     echo "Error: Expected exactly 2 arguments."
+#     exit 1 # Exit with a non-zero status to indicate an error
+# fi
 
-echo Creating kafka topic $1
+echo Creating kafka topic Transactions and Frauds
 
 PORT=9092
 
@@ -19,4 +19,5 @@ while ! check_port; do
     sleep 1
 done
 
-$KAFKA_DIR/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic $1
+$KAFKA_DIR/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic Transactions
+$KAFKA_DIR/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic Frauds

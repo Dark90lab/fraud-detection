@@ -18,7 +18,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>org.example.FraudsDetector</mainClass>
+                  <mainClass>org.main.FraudsDetector</mainClass>
                 </transformer>
               </transformers>
             </configuration>
