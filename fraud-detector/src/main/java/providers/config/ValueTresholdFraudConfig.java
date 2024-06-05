@@ -5,14 +5,14 @@ import models.Range;
 import java.io.Serializable;
 
 public class ValueTresholdFraudConfig implements Serializable {
-    public final float minValueAmount;
-    public final float largeValueAmount;
+    public final double minValueAmount;
+    public final double largeValueAmount;
     public final Range fraudsTimeRange;
 
     public ValueTresholdFraudConfig() throws  Exception
     {
-        minValueAmount = 1.0f;
-        largeValueAmount = 5.0f;
-        fraudsTimeRange = new Range("0,0.5");
+        minValueAmount = 1.0d;
+        largeValueAmount = 500.0d;
+        fraudsTimeRange = new Range("1,5");
     }
 }

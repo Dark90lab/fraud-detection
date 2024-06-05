@@ -13,7 +13,7 @@ public class LocationConfig implements Serializable {
         latitude = new Range("24.396308,49.384358");
         longitude = new Range("-125.0,-66.93457");
         maxRadiusDeviation = 5d;
-        locationTimeTreshold = 1000;
+        locationTimeTreshold = 5;
     }
 
     public boolean IsLocationInGeoBoundingBox(double lat, double lon)

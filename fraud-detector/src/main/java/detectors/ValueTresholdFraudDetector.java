@@ -35,7 +35,7 @@ public class ValueTresholdFraudDetector extends KeyedProcessFunction<Long, Trans
         {
             flagState.update(true);
 
-            long timer = context.timerService().currentProcessingTime()+ (long)((config.fraudsTimeRange.to - config.fraudsTimeRange.from)*1000);
+            long timer = context.timerService().currentProcessingTime()+ (long)(config.fraudsTimeRange.to*1000);
             context.timerService().registerProcessingTimeTimer(timer);
 
             timerState.update(timer);

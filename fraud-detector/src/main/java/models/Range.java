@@ -11,7 +11,7 @@ public class Range implements Serializable {
 
         if(splitRange.length != 2)
             throw new Exception(String.format("Range must be defined by two float numbers separated by ',' delimiter, given: %s",range));
-        from = Float.parseFloat(splitRange[0]);
-        to = Float.parseFloat(splitRange[1]);
+        from = Double.parseDouble(splitRange[0]);
+        to = Double.parseDouble(splitRange[1]);
     }
 }

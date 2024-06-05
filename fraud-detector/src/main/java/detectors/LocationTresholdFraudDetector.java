@@ -48,7 +48,7 @@ public class LocationTresholdFraudDetector extends KeyedProcessFunction<Tuple2<L
 
         // Set a timer if not already set
         if (timerTimestamp == null) {
-            long timer = currentProcessingTime + config.locationTimeTreshold;
+            long timer = currentProcessingTime + config.locationTimeTreshold*1000;
             context.timerService().registerProcessingTimeTimer(timer);
             timerState.update(timer);
         }

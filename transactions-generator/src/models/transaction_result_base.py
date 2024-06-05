@@ -8,9 +8,9 @@ class TransactionResultBase(Serializable):
         self.card_id = card_id
         self.user_id = user_id
         self.value = value
-        self.timestamp = datetime.now().timestamp()
+        self.timestamp = None
         self.type = type
 
-    def update_timestamp(self, timestamp):
+    def update_timestamp(self, timestamp=None):
         self.timestamp = timestamp if timestamp is not None else datetime.now().timestamp()
         return self

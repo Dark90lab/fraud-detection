@@ -24,22 +24,31 @@ class TransactionsGenerator(BaseGenerator):
         pass
 
     def run(self):
+        if self.config.NUMBER_OF_EVENTS != None:
+            for _ in range(0, self.config.NUMBER_OF_EVENTS):
+                self.on_tick()
+            return
+
         while True:
-            user = self.user_generator.get_user_data()
-            transaction_factory = self.transactions_factory.get_transaction_factory()
+            self.onTick()
 
-            print(
-                f"User ID {user.user_id} assigned cards {user.cards_ids}")
+    def on_tick(self):
+        user = self.user_generator.get_user_data()
+        transaction_factory = self.transactions_factory.get_transaction_factory()
 
-            transactions = transaction_factory(
-                self.locations_generator, self.id_provider, self.scenario, user).generate()
+        print(
+            f"User ID {user.user_id} assigned cards {user.cards_ids}")
 
-            for (timeout, transaction) in transactions:
+        transactions = transaction_factory(
+            self.locations_generator, self.id_provider, self.scenario, user).generate()
 
-                print(serializer(transaction.to_dict()))
+        for (timeout, transaction) in transactions:
 
-                if self.config.IS_DEVELOPMENT == False:
-                    self.producer.send(self.config.KAFKA_TOPIC,
-                                       transaction.to_dict())
+            print(serializer(transaction.to_dict()))
 
-                time.sleep(timeout)
+            if self.config.IS_DEVELOPMENT == False:
+                transaction.update_timestamp()
+                self.producer.send(self.config.KAFKA_TOPIC,
+                                   transaction.to_dict())
+
+            time.sleep(timeout)
