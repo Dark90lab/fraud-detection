@@ -8,6 +8,7 @@ public class Transaction {
     public double value;
     public double timestamp;
     public Location location;
+    public double limit;
 
     public Long getUserid()
     {

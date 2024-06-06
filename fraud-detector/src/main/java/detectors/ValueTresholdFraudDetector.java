@@ -44,7 +44,7 @@ public class ValueTresholdFraudDetector extends KeyedProcessFunction<Long, Trans
         // Check if the flag is set
         if(lastTransactionWasSmall != null)
         {
-            if(transaction.value > config.largeValueAmount)
+            if(transaction.value >= (config.percentageLimitTreshold*(transaction.limit+transaction.value)))
             {
                 collector.collect(transaction);
             }

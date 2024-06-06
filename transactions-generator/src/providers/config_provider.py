@@ -13,6 +13,9 @@ class ConfigProvider:
         self.IS_DEVELOPMENT = bool(getenv("DEVELOPMENT") == "True")
         self.NUMBER_OF_EVENTS = int(getenv("NUMBER_OF_EVENTS")) if getenv(
             "NUMBER_OF_EVENTS") != None else None
+        self.MIN_FOUNDS = float(getenv("MIN_FOUNDS"))
+        self.MAX_FOUNDS = float(getenv("MAX_FOUNDS"))
+        self.MIN_FOUND_TO_REUSE_USER = float(getenv("MIN_FOUND_TO_REUSE_USER"))
 
         if self.CARDS_NUMBER is None or self.USERS_NUMBER is None or self.MAX_CARDS_PER_USER is None:
             raise Exception("Provide all required env variables!")

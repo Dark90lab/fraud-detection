@@ -1,47 +1,89 @@
-# Generator transakcji - PYTHON
+# Transaction generator and frauds detector system (kafka + flink)
 
-Parametry
+## System architecture
 
-- ilość kart
-- ilośc użytkowników
-- max ilośc kart per użytkownik
+![Frauds detection system](./assets/Frauds-Detector.png)
 
-1. generacja transackji z zadanym rozkładem normalnym
-2. zachowanie relacji One-To-Many dla uzytkownik-karty
-3. generowanie skrajnie dużych i skrajnie małych transakcji dla UŻYTKOWNIKA - procentowo
-4. generowanie podejrzanych częstotliwości transakcji dla jednej / wszystkich kart
+System is working correctly on `MacOS v14.5 Soma` on M1.
 
-5. generownie transakcji z poza obszaru akceptowalnego - np ocean
-6. generowanie trnasakcji na obszarze dopuszczalnym o zwiększonej częstotliwości w wielu obszarach różniących sie
-7. nagłe generowanie dopuszczalnych ale nie standardowych wartości transakcji (percentile analysis, mean standard deviation)
-8. generowanie dwóch kolejnych transakcji w krótkim odstępie czasowym
+## Frauds Detector flink job
 
-## tryby
+![Flink job diagram](./assets/ffrauds-detector-job.png)
 
-### Zadany scenariusz
+## Transactions monitoring
 
-100 popranych
-10 ze skrajnymi wartościami
-10 transackji odbiegających od progu
-10 transackj poza obszarem
-10 transackj poza percentylami lokalizacji
-10 transackji percentylowe
+![Analyzer](./assets/Analyzer.png)
 
-### Generacja real time na podstawie prawdopodobienstwa
+## Requirements:
 
-# Detekcja anomalii - JAVA
+- Kafka: 3.7.0
+- Flink: 1.19.0
+- JAVA SDK: v11.X (flink), v8.X (kafka)
+- Kafdrop: 3.29.0
+- MAVEN: 3.9.6
+- IntelliJ IDE
 
-Complexity - 1-3
+## How to setup system step by step
 
-1. Analiza progowa (Treshold Analysis)
+Setup env variables in the `infrastructure/.env` file:
 
-   - wykrywanie skrajnie małych i skrajnie dużych transakcji na podstawie tresholdu dla wszystkich transackji (1)
-   - wykrywanie odbiegających od zadanego progu częstotliwości wykonywania transakcji dla wszystkich transakcji(2)
+```yaml
+KAFKA_DIR=  directory where kafka is installed
+FLINK_DIR=directory where flink is installed
+KAFKA_LOG_DIR=./~
+JAVA_11_BIN_PATH= path to the java 11 sdk bin file
+KAFDROP_PATH= path to kafdrop jar file
+```
 
-2. Analiza lokalizacji (Pattern-Based Anomaly Detection)
-   - transakcje wykonywane w obszarze poza treshold i po za terytorium stanów zjedoczonych (1) - wszystkie transakcje
-   - badanie percentyli lokalizacji transakcji oraz limitów odległości - wszystkie transakcje (3)
-3. Analiza statystyczna (Statistical Analysis)
-   - analiza percentylowa- np. detekcja wartości transakcji w 95 centylu - wszystkie transakcje (3)
-   - analiza stępli czasowych - wykrywanie czy dwie transakcje nie zostąły wykonane w za krótkim odstepie czasowym - wszystkie transackje (3)
-   - analiza średniej wartości transakcji i odchylenia standardowego - wszystkie transakcje (3)
+1. Start kafka & zookeeper cluster
+
+```bash
+infrastructure/scripts/kafka-setup.sh
+```
+
+Sometimes there is a problem with racing between threads which starts kafka and kafdrop, in this situation stop the process and start one more time
+
+2. Start flink cluster
+
+```bash
+infrastructure/scripts/flink-run.sh
+```
+
+3. Verify is everything working correctly:
+
+- Open kafdrop to verify is kafka working properly: `localhost:9000`
+- Open flink interface: `localhost:8081`
+
+4. Build java Fraud Detector app
+
+- the best way is to use IntelijIDE and use maven `package` build option
+
+5. Submit flink job
+
+```bash
+flink run <frauds-detector>.jar
+```
+
+6. Prepare python environment:
+
+```bash
+./transactions-generator/setup-env.sh
+```
+
+7. Run generator:
+
+```bash
+python transactions-generator/src/main.py
+```
+
+8. Run transactions analyzer
+
+```bash
+python  transaction-generator/src/analyzer/analyzer.py
+```
+
+9. After working with the system cleanup all:
+
+```bash
+./infrastructure/scripts/cleanup.sh
+```

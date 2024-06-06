@@ -3,13 +3,13 @@ from .transaction_result_base import TransactionResultBase
 
 
 class TransactionResult(TransactionResultBase):
-    def __init__(self, id: int, card_id: int, user_id: int, location: Location, value: float, type: str) -> None:
-        super().__init__(id, card_id, user_id, value, type)
+    def __init__(self, id: int, card_id: int, user_id: int, location: Location, value: float, type: str, limit: float) -> None:
+        super().__init__(id, card_id, user_id, value, type, limit)
         self.location = location
 
     @classmethod
     def fromBase(self, base: TransactionResultBase):
-        return TransactionResult(id=base.id, card_id=base.card_id, user_id=base.user_id, location=None, value=base.value, type=base.type)
+        return TransactionResult(id=base.id, card_id=base.card_id, user_id=base.user_id, location=None, value=base.value, type=base.type, limit=base.limit)
 
     def update_location(self, location: Location):
         self.location = location
@@ -22,6 +22,7 @@ class TransactionResult(TransactionResultBase):
             'user_id': int(self.user_id),
             'card_id': int(self.card_id),
             'value': self.value,
+            'limit': self.limit,
             'timestamp': self.timestamp,
             'location': self.location.to_dict()
         }

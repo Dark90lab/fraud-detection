@@ -33,7 +33,12 @@ class TransactionsGenerator(BaseGenerator):
             self.onTick()
 
     def on_tick(self):
-        user = self.user_generator.get_user_data()
+        user = None
+        while True:
+            user = self.user_generator.get_user_data()
+            if user.limit > self.config.MIN_FOUND_TO_REUSE_USER:
+                break
+
         transaction_factory = self.transactions_factory.get_transaction_factory()
 
         print(
@@ -44,10 +49,10 @@ class TransactionsGenerator(BaseGenerator):
 
         for (timeout, transaction) in transactions:
 
+            transaction.update_timestamp()
             print(serializer(transaction.to_dict()))
 
             if self.config.IS_DEVELOPMENT == False:
-                transaction.update_timestamp()
                 self.producer.send(self.config.KAFKA_TOPIC,
                                    transaction.to_dict())
 

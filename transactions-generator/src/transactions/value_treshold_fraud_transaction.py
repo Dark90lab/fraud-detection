@@ -5,8 +5,6 @@ import numpy as np
 
 
 class ValueTresholdFraudTransaction(TransactionBase):
-    value_exceed_limit = 500
-
     TYPE = 'VT'
 
     def get_result(self, value: float) -> TransactionResult:
@@ -24,13 +22,14 @@ class ValueTresholdFraudTransaction(TransactionBase):
 
         small_amount_transaction = self.get_result(
             round(np.random.uniform(0.01, self.scenario.MIN_VALUE_AMOUNT), 2))
-        large_amount_transaction = self.get_result(
-            np.random.uniform(self.scenario.LARGE_VALUE_AMOUNT,
-                              round(self.scenario.LARGE_VALUE_AMOUNT + self.value_exceed_limit, 2))
-        )
 
         result.append((self.get_suspicious_waiting_time(),
                       small_amount_transaction))
+
+        large_amount_transaction = self.get_result(round(
+            np.random.uniform(self.scenario.LIMIT_PERCENT_TRESHOLD*self.user.limit, self.user.limit), 2)
+        )
+
         result.append((self.get_suspicious_waiting_time(),
                       large_amount_transaction))
 

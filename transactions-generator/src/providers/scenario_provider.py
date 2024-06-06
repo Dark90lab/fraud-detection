@@ -45,17 +45,9 @@ class ScenarioProvider:
                                float]
 
     def __init__(self):
-        # self.VALUE_TRESHOLD_FRAUDS_PERCENT = float(
-        #     getenv("VALUE_TRESHOLD_FRAUDS_PERCENT"))
 
-        # self.LOCATION_TRESHOLD_FRAUDS_PERCENT = float(
-        #     getenv("LOCATION_TRESHOLD_FRAUDS_PERCENT"))
-        # self.SUSPICIOUS_FREQENCY_FRAUDS_PERCENT = float(
-        #     getenv("SUSPICIOUS_FREQENCY_FRAUDS_PERCENT"))
         self.MIN_VALUE_AMOUNT = float(getenv("MIN_VALUE_AMOUNT"))
-        self.LARGE_VALUE_AMOUNT = float(getenv("LARGE_VALUE_AMOUNT"))
-        # self.TRANSACTIONS_TIME_TRESHOLD = float(
-        #     getenv("TRANSACTIONS_TIME_TRESHOLD"))
+
         self.ORDINARY_TRAN_TIME_RANGE = TimeRange(
             getenv("ORDINARY_TRAN_TIME_RANGE"))
         self.VALUE_TRESHOLD_FRAUDS_TIME_RANGE = TimeRange(
@@ -63,3 +55,4 @@ class ScenarioProvider:
         self.frauds_probabilities = FraudProbabilitiesAdapter.get_probabilities()
         self.LOCATION_TRESHOLD_FRAUDS_TIME_RANGE = TimeRange(
             getenv("LOCATION_TRESHOLD_FRAUDS_TIME_RANGE"))
+        self.LIMIT_PERCENT_TRESHOLD = float(getenv("LIMIT_PERCENT_TRESHOLD"))
